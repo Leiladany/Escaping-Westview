@@ -1,40 +1,43 @@
 body {
     padding: 0;
     text-align: center;
-    display: flex;
+    display:block;
+    background-image: url("../images/Background/red-background-display-your-product.jpg");
   }
-  
-  .game-intro {
-    float: left;
-    padding: 0% 10%;
+
+  a {
+    margin-left: 70px;
+    color: rgb(118, 25, 25) ;
   }
   
   .game-intro p {
     font-size: 18px;
-    font-family: "Verdana"
+    font-family: "Verdana";
+    align-items: center;
+    color: #fff;
   }
   
   .logo-img {
-    width: 350px;
-  }
-  
-  .arrows-img {
-    width: 150px;
+    display: block;
+    margin-top: 150px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 30%;
   }
   
   body button {
     font-size: 30px;
-    background-color: #870007;
-    color: #fff;
-    padding: 20px 40px;
-    border: 0;
+    font-family: 'Bahnschrift SemiBold';
+    text-shadow: -1px 0 rgb(171, 28, 28), 0 1px rgb(171, 28, 28), 1px 0 black, 0 -1px black;
+    background-color: black;
+    color: rgb(99, 91, 91);
+    padding: 10px 20px;
+    border: 2;
+    border-color: rgb(171, 28, 28);
     box-shadow: 0;
-    border-radius: 5px;
+    border-radius: 20px;
     margin-bottom: 20px;
+    
   }
   
-  #game-board {
-      float: left;
-      padding: 20px 0px;
-  }
   
