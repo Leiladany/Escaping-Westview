@@ -11,6 +11,13 @@ playImg.src = './Images/Wanda/WandaPresent.png'
 const obsImg = new Image()
 obsImg.src = './Images/Fireballs/Purple.png'
 
+const obsImg2 = new Image()
+obsImg2.src = './Images/Fireballs/Purple.png'
+
+const obsImg3 = new Image()
+obsImg2.src = './Images/Fireballs/Purple.png'
+
+
 const playWidth = 250
 const playHeight = 200
 
@@ -24,38 +31,23 @@ let isMoveUp = false
 let isMoveDown = false
 let isNotMove = true
 
+let obsx = -10
+let obsy = 0
+let obsspeed = 5
+
 let animateId
 let gameOver = false
-
-let obstacles = []
-
-class Obstacle {
-    constructor(Obsx, Obsy, width, height) {
-        this.Obsx = Obsx
-        this.Obsy = Obsy
-        this.width = width
-        this.height = height
-}
-
-draw() {
-    ctx.beginPath()
-    
-    ctx.Obsy += 2
-    ctx.fill()
-    ctx.closePath()
-}
-}
 
 
 const startBtn = document.getElementById('start-button')
 
-
-
-
 const animate = () => {
     ctx.drawImage(backImg, 0, 0, myCanvas.width, myCanvas.height)
     ctx.drawImage(playImg, playx, playy, 200, 200)
-    ctx.drawImage(obsImg, this.Obsx, this.Obsy, this.width, this.height)
+    ctx.drawImage(obsImg, obsx, 20, 20, 300)
+
+    obsx += obsspeed
+    obsy += obsspeed
 
     if (isMoveLeft && playx > -10) {
         playx -= playspeed
