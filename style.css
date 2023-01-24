@@ -9,7 +9,7 @@ body {
     color: rgb(118, 25, 25) ;
   }
   
-  .game-intro p {
+  .menu p {
     font-size: 18px;
     font-family: "Verdana";
     align-items: center;
@@ -37,6 +37,10 @@ body {
     border-radius: 20px;
     margin-bottom: 20px;
     
+  }
+
+  canvas {
+    margin-left: 25px;
   }
   
   

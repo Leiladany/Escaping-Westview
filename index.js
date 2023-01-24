@@ -8,28 +8,18 @@ backImg.src = './Images/Background/present.png'
 const backImg2 = new Image()
 backImg2.src = './Images/Background/present.png'
 
-const playImg = new Image()
-playImg.src = './Images/Wanda/WandaPresent.png'
+const player = new Image()
+player.src = './Images/Wanda/WandaPresent.png'
 
-const obsImg = new Image()
-obsImg.src = './Images/Fireballs/Purple.png'
-
-const obsImg2 = new Image()
-obsImg2.src = './Images/Fireballs/Purple.png'
-
-const obsImg3 = new Image()
-obsImg2.src = './Images/Fireballs/Purple.png'
-
-
-const playWidth = 250
-const playHeight = 200
+const spell = new Image()
+spell.src = './Images/Fireballs/Purple.png'
 
 let backgroundy = 0
 let backgroundy2 = -myCanvas.width
 
-let playx = 800
-let playy = 0
-let playspeed = 5
+let playX = 0
+let playY = 0
+let playSpeed = 5
 
 let isMoveLeft = false
 let isMoveRight = false
@@ -37,51 +27,22 @@ let isMoveUp = false
 let isMoveDown = false
 let isNotMove = true
 
-let obsx = 0
-let obsy = 0
-let obsspeed = 5
+let spellX = 0
+let spellY = 0
+let spellSpeed = 5
 
+let score = 0
 let animateId
 let gameOver = false
 
-let obstacles =[]
-
-class Obstacle {
-  constructor(obsx, obsy, width, height) {
-    this.obsx = obsx
-    this.obsy = obsy
-    this.width = width
-    this.height = height
-} 
-
-draw() {
-  ctx.beginPath()
-  ctx.obsImg = new Image()
-  ctx.obsImg.src = './Images/Fireballs/Purple.png'
-  ctx.rect(this.obsx, this.obsy, this.width, this)
-  ctx.closePath
-}
-
-checkCollision() {
-
-    playx < this.obsx + this.width &&
-    playx + playWidth > this.obsx &&
-    playy < this.obsy + this.height &&
-     {
-    gameOver : true
-  }
-
-}
-}
-
+let spellMove = [{x: myCanvas.width, y: myCanvas.height -250}]
 
 const startBtn = document.getElementById('start-button')
 
 function animate () {
     ctx.drawImage(backImg, backgroundy, 0, myCanvas.width, myCanvas.height)
     ctx.drawImage(backImg2, backgroundy2, 0, myCanvas.width, myCanvas.height)
-    ctx.drawImage(playImg, playx, playy, 200, 200)
-    ctx.drawImage(obsImg, obsx, 0, 200, 100)
+    ctx.drawImage(player, playX, playY, 200, 200)
 
     backgroundy += 2
     backgroundy2 += 2
@@ -94,21 +55,30 @@ function animate () {
       backgroundy2 = -myCanvas.width
     }
 
-    obsx += obsspeed
-    obsy += obsspeed
+    for (let i=0; i<spellMove.length; i++) {
+      ctx.drawImage(spell, spellMove[i].x, spellMove[i].y, 200, 100)
 
-    if (isMoveLeft && playx > -10) {
-        playx -= playspeed
-      } else if (isMoveRight && playx < 1000) {playx += playspeed
+      spellMove[i].x = spellMove[i].x - spellSpeed
+    
+    if (spellMove[i].x <= 8 && spellMove[i].x > 0) {
+      score++
+    }
+    if (spellMove[i].x < -200) {
+      spellMove[i] = {x: 3000, y: myCanvas.height -250}
+    }
+
+    if (isMoveLeft && playX > -10) {
+        playX -= playSpeed
+      } else if (isMoveRight && playX < 1000) {playX += playSpeed
       } else if (isNotMove) {
-        playx = 1000
+        playX = 0
       }
 
-      if (isMoveUp && playy > 0) {
-        playy -= playspeed
-      } else if (isMoveDown && playy < 350) {playy += playspeed
+      if (isMoveUp && playY > 0) {
+        playY -= playSpeed
+      } else if (isMoveDown && playY < 350) {playY += playSpeed
       } else if (isNotMove) {
-        playy = 170
+        playY = 170
       }
       
       if (!gameOver){
@@ -141,21 +111,18 @@ function animate () {
         })
     
 }
+}
 
 const startGame = () => {
-    document.querySelector('.game-intro').style.display = 'none'
+    document.querySelector('.menu').style.display = 'none'
     animate()
 }
 
-startBtn.addEventListener('click', () => {
-    startBtn.style.display = 'none'
-  })
-
 window.addEventListener('load', () => {
     document.getElementById('start-button').onclick = () => {
-        startGame()
+      startGame()
+      startBtn.addEventListener('click', () => {
+        startBtn.style.display = 'none'
+      })
     }
-
 })
-
-
