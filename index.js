@@ -17,8 +17,8 @@ spell.src = './Images/Fireballs/Purple.png'
 let backgroundy = 0
 let backgroundy2 = -myCanvas.width
 
-let playX = 0
-let playY = 0
+let playX = 70
+let playY = 200
 let playSpeed = 5
 
 let isMoveLeft = false
@@ -26,9 +26,6 @@ let isMoveRight = false
 let isMoveUp = false
 let isMoveDown = false
 let isNotMove = true
-
-let spellX = 0
-let spellY = 0
 let spellSpeed = 5
 
 let score = 0
@@ -41,10 +38,10 @@ const startBtn = document.getElementById('start-button')
 
 function animate () {
     ctx.drawImage(backImg, backgroundy, 0, myCanvas.width, myCanvas.height)
-    ctx.drawImage(backImg2, backgroundy2, 0, myCanvas.width, myCanvas.height)
-    ctx.drawImage(player, playX, playY, 200, 200)
+    /* ctx.drawImage(backImg2, backgroundy2, 0, myCanvas.width, myCanvas.height) */
+    ctx.drawImage(player, playX, playY, 125, 125)
 
-    backgroundy += 2
+    /* backgroundy += 2
     backgroundy2 += 2
 
     if (backgroundy > myCanvas.width) {
@@ -53,10 +50,10 @@ function animate () {
 
     if (backgroundy2 > myCanvas.width) {
       backgroundy2 = -myCanvas.width
-    }
+    } */
 
     for (let i=0; i<spellMove.length; i++) {
-      ctx.drawImage(spell, spellMove[i].x, spellMove[i].y, 200, 100)
+      ctx.drawImage(spell, spellMove[i].x, spellMove[i].y, 120, 120)
 
       spellMove[i].x = spellMove[i].x - spellSpeed
     
@@ -64,7 +61,18 @@ function animate () {
       score++
     }
     if (spellMove[i].x < -200) {
-      spellMove[i] = {x: 3000, y: myCanvas.height -250}
+      spellMove[i] = {x: 3000, y: 200}
+    }
+
+    let obst1 = {radius:40, x: playX, y: playY}
+    let obst2 = {radius:30, x: spellMove[i].x + 20, y: 200}
+
+    let distx = obst1.x - obst2.x
+    let disty = obst1.y - obst2.y
+    let distance = Math.sqrt(distx * distx + disty * disty)
+
+    if (distance < obst1.radius + obst2.radius) {
+      gameOver = true
     }
 
     if (isMoveLeft && playX > -10) {
@@ -76,7 +84,7 @@ function animate () {
 
       if (isMoveUp && playY > 0) {
         playY -= playSpeed
-      } else if (isMoveDown && playY < 350) {playY += playSpeed
+      } else if (isMoveDown && playY < 420) {playY += playSpeed
       } else if (isNotMove) {
         playY = 170
       }
@@ -116,9 +124,11 @@ function animate () {
 const startGame = () => {
     document.querySelector('.menu').style.display = 'none'
     animate()
+    canva.style.display='flex'
 }
 
 window.addEventListener('load', () => {
+  canva.style.display='none'
     document.getElementById('start-button').onclick = () => {
       startGame()
       startBtn.addEventListener('click', () => {
