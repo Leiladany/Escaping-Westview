@@ -14,9 +14,9 @@ body, html {
   
   .menu p {
     font-size: 18px;
-    font-family: "Verdana";
+    font-family: 'Bahnschrift SemiBold';
     align-items: center;
-    color: #fff;
+    color: rgb(189, 95, 95);
   }
   
   .logo-img {
@@ -38,6 +38,7 @@ body, html {
     border-color: rgb(171, 28, 28);
     box-shadow: 0;
     border-radius: 20px;
+    margin-top: 20px;
     margin-bottom: 20px;
     
   }
@@ -52,7 +53,7 @@ body, html {
   #link1 {
     font-size: 15px;
     color:rgb(118, 25, 25);
-    padding-top: 130px;
+    padding-top: 120px;
   }
 
   #link2 {
