@@ -30,11 +30,13 @@ let spellSpeed = 5
 
 let score = 0
 let animateId
-let gameOver = false
+let intervalId = 0
 
 let spellMove = [{x: myCanvas.width, y: myCanvas.height -250}]
 
-const startBtn = document.getElementById('start-button')
+let startBtn = document.getElementById('start-button')
+let restartBtn = document.getElementById('restart')
+let gameOver = document.querySelector("#gameOver")
 
 function animate () {
     ctx.drawImage(backImg, backgroundy, 0, myCanvas.width, myCanvas.height)
@@ -65,7 +67,7 @@ function animate () {
     }
 
     let obst1 = {radius:40, x: playX, y: playY}
-    let obst2 = {radius:30, x: spellMove[i].x + 20, y: 200}
+    let obst2 = {radius:40, x: spellMove[i].x + 20, y: 200}
 
     let distx = obst1.x - obst2.x
     let disty = obst1.y - obst2.y
@@ -89,10 +91,12 @@ function animate () {
         playY = 170
       }
       
-      if (!gameOver){
-        animateId = requestAnimationFrame(animate)
+      if (gameOver){
+        cancelAnimationFrame(intervalId)
+        lose()
+        score = 0
       } else {
-      cancelAnimationFrame(animateId)
+        intervalId = requestAnimationFrame(animate)
       }
 
       document.addEventListener('keypress', event => {
@@ -121,18 +125,40 @@ function animate () {
 }
 }
 
-const startGame = () => {
-    document.querySelector('.menu').style.display = 'none'
-    animate()
-    canva.style.display='flex'
+function lose() {
+  gameOver = false;
+  myCanvas.style.display = "none"
+  startBtn.style.display = "none"
+  restartBtn.style.display = ""
+  document.querySelector('.gameOver').style.display = 'block'
+
+  playX= 70
+  playY= 200
+  spellMove = [{x: myCanvas.width , y: 200}]
+  
+}
+
+function startGame() {
+  animate()
+  document.querySelector('.menu').style.display = 'none'
+  canva.style.display='flex'
+  document.querySelector('.gameOver').style.display = 'none'
 }
 
 window.addEventListener('load', () => {
+
   canva.style.display='none'
-    document.getElementById('start-button').onclick = () => {
-      startGame()
-      startBtn.addEventListener('click', () => {
-        startBtn.style.display = 'none'
-      })
+  restart.style.display='none'
+  
+
+  document.querySelector('.gameOver').style.display = 'none'
+  
+  document.getElementById('start-button').onclick = () => {
+    startGame()
     }
+
+    document.getElementById('restart').onclick = () => {
+      startGame()
+
+  }
 })
