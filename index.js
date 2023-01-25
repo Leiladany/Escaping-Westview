@@ -1,6 +1,6 @@
 const myCanvas = document.querySelector('canvas')
 const ctx = myCanvas.getContext('2d')
-myCanvas.style.border = '8px solid white'
+myCanvas.style.border = '8px solid #911717'
 
 const backImg = new Image()
 backImg.src = './Images/Background/present.png'
@@ -90,6 +90,13 @@ function animate () {
       } else if (isNotMove) {
         playY = 170
       }
+
+  ctx.font = "60px Georgia";
+  ctx.fillStyle = "#B90F0F";
+  ctx.fillText(`Score: ${score}`,
+  myCanvas.width / 2 - 100,
+  myCanvas.height - 500
+  )
       
       if (gameOver){
         cancelAnimationFrame(intervalId)
@@ -135,8 +142,12 @@ function lose() {
   playX= 70
   playY= 200
   spellMove = [{x: myCanvas.width , y: 200}]
-  
+  let Score = document.querySelector(".gameOver h2")
+Score.innerHTML = `Score: ${score}`
 }
+
+
+
 
 function startGame() {
   animate()
