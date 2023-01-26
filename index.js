@@ -16,16 +16,16 @@ const spell = new Image()
 spell.src = './Images/Fireballs/Purple.png'
 
 let backsound = new Audio('./Sound/backsound.mp3')
-backsound.volume = 0.3
+backsound.volume = 0.1
 let evilL = new Audio('./Sound/evilL.mp3')
-evilL.volume = 0.3
+evilL.volume = 0.1
 
 let backgroundy = 0
 let backgroundy2 = -myCanvas.width
 
 let playX = 70
 let playY = 200
-let playSpeed = 3
+let playSpeed = 2.3
 
 let isMoveLeft = false
 let isMoveRight = false
@@ -38,7 +38,7 @@ let score = 0
 let animateId
 let intervalId = 0
 
-let spellSpeed = 3
+let spellSpeed = 4
 let spellMove1 = [{x: myCanvas.width, y: myCanvas.height -330}]
 let spellMove2 = [{x: myCanvas.width + 1800, y: 100}]
 let spellMove3 = [{x: myCanvas.width + 2400, y: 350}]
@@ -71,7 +71,7 @@ function animate () {
 
       spellMove1[i].x = spellMove1[i].x - spellSpeed
     
-    if (spellMove1[i].x <= 8 && spellMove1[i].x > 0) {
+    if (spellMove1[i].x <= 12 && spellMove1[i].x > 0) {
       score++
     }
     if (spellMove1[i].x < -200) {
@@ -95,7 +95,7 @@ function animate () {
 
       spellMove2[i].x = spellMove2[i].x - (spellSpeed + 1)
     
-    if (spellMove2[i].x <= 8 && spellMove2[i].x > 0) {
+    if (spellMove2[i].x <= 12 && spellMove2[i].x > 0) {
       score++
     }
     if (spellMove2[i].x < -200) {
@@ -119,7 +119,7 @@ function animate () {
 
       spellMove3[i].x = spellMove3[i].x - spellSpeed
 
-    if (spellMove3[i].x <= 8 && spellMove3[i].x > 0) {
+    if (spellMove3[i].x <= 12 && spellMove3[i].x > 0) {
   score++
     }
     if (spellMove3[i].x < -200) {
@@ -142,9 +142,9 @@ function animate () {
     for (let i=0; i<spellMove4.length; i++) {
       ctx.drawImage(spell, spellMove4[i].x, spellMove4[i].y, 120, 120)
 
-      spellMove4[i].x = spellMove4[i].x - (spellSpeed + 2)
+      spellMove4[i].x = spellMove4[i].x - spellSpeed
 
-    if (spellMove4[i].x <= 8 && spellMove4[i].x > 0) {
+    if (spellMove4[i].x <= 12 && spellMove4[i].x > 0) {
   score++
     }
     if (spellMove4[i].x < -200) {
@@ -167,9 +167,9 @@ function animate () {
     for (let i=0; i<spellMove5.length; i++) {
       ctx.drawImage(spell, spellMove5[i].x, spellMove5[i].y, 120, 120)
 
-      spellMove5[i].x = spellMove5[i].x - spellSpeed
+      spellMove5[i].x = spellMove5[i].x - (spellSpeed +1)
 
-    if (spellMove5[i].x <= 9 && spellMove5[i].x > 0) {
+    if (spellMove5[i].x <= 12 && spellMove5[i].x > 0) {
   score++
     }
     if (spellMove5[i].x < -200) {
@@ -189,13 +189,15 @@ function animate () {
     }
 
     if (score >= 20) {
-      spellSpeed = 8;
+      spellSpeed = 12;
     } else if (score >= 15) {
-      spellSpeed = 7;
+      spellSpeed = 10;
     } else if (score >= 10) {
-      spellSpeed = 5;
+      spellSpeed = 8;
+    } else if (score >= 5) {
+      spellSpeed = 6;
     } else {
-      spellSpeed = 3;
+      spellSpeed = 4;
     }
 
     if (isMoveLeft && playX > -10) {
