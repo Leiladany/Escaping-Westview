@@ -53,6 +53,6 @@ Escaping Westview is a game inspired by the Marvel series "WandaVision" in which
 
 ## Links
 
-- [Slides Link]
+- [Slides Link] (https://docs.google.com/presentation/d/1Kl6EAXFMHPGpn-14FDCvp9nrF8mM61t_HrhEfYQ6Cw0/edit?usp=sharing)
 - Github repository Link] (https://github.com/Leiladany/Escaping-Westview.git)
 - [Deployment Link] (https://leiladany.github.io/Escaping-Westview/)
