@@ -7,7 +7,7 @@ const backImg = new Image()
 backImg.src = './Images/Background/newback.jpg'
 
 const backImg2 = new Image()
-backImg2.src = './Images/Background/present.png'
+backImg2.src = './Images/Background/newback.jpg'
 
 const player = new Image()
 player.src = './Images/Wanda/WandaPresent.png'
@@ -20,7 +20,7 @@ let backgroundy2 = -myCanvas.width
 
 let playX = 70
 let playY = 200
-let playSpeed = 5
+let playSpeed = 3
 
 let isMoveLeft = false
 let isMoveRight = false
@@ -33,9 +33,9 @@ let score = 0
 let animateId
 let intervalId = 0
 
-let spellMove1 = [{x: myCanvas.width, y: myCanvas.height -230}]
-let spellMove2 = [{x: myCanvas.width, y: 200}]
-let spellMove3 = [{x: myCanvas.width, y: 300}]
+let spellMove1 = [{x: myCanvas.width, y: myCanvas.height -330}]
+let spellMove2 = [{x: myCanvas.width + 1800, y: 100}]
+let spellMove3 = [{x: myCanvas.width + 2400, y: 350}]
 
 let startBtn = document.getElementById('start-button')
 let restartBtn = document.getElementById('restart')
@@ -43,10 +43,10 @@ let gameOver = document.querySelector("#gameOver")
 
 function animate () {
     ctx.drawImage(backImg, backgroundy, 0, myCanvas.width, myCanvas.height)
-    /* ctx.drawImage(backImg2, backgroundy2, 0, myCanvas.width, myCanvas.height) */
+    ctx.drawImage(backImg2, backgroundy2, 0, myCanvas.width, myCanvas.height) 
     ctx.drawImage(player, playX, playY, 125, 125)
 
-    /* backgroundy += 2
+    backgroundy += 2
     backgroundy2 += 2
 
     if (backgroundy > myCanvas.width) {
@@ -55,7 +55,7 @@ function animate () {
 
     if (backgroundy2 > myCanvas.width) {
       backgroundy2 = -myCanvas.width
-    } */
+    }
 
 //1st spell
     for (let i=0; i<spellMove1.length; i++) {
@@ -71,7 +71,7 @@ function animate () {
     }
 
     let obst1 = {radius:30, x: playX, y: playY}
-    let obst2 = {radius:40, x: spellMove1[i].x + 20, y: 200}
+    let obst2 = {radius:30, x: spellMove1[i].x + 23, y: 200}
 
     let distx = obst1.x - obst2.x
     let disty = obst1.y - obst2.y
@@ -83,7 +83,7 @@ function animate () {
     }
 //2nd spell
     for (let i=0; i<spellMove2.length; i++) {
-      ctx.drawImage(spell, spellMove2[i].x, spellMove2[i].y, 90, 90)
+      ctx.drawImage(spell, spellMove2[i].x, spellMove2[i].y, 120, 120)
 
       spellMove2[i].x = spellMove2[i].x - (spellSpeed + 2)
     
@@ -91,11 +91,11 @@ function animate () {
       score++
     }
     if (spellMove2[i].x < -200) {
-      spellMove2[i] = {x: 3000, y: 300}
+      spellMove2[i] = {x: 3000, y: 100}
     }
 
-    let obst1 = {radius:40, x: playX, y: playY}
-    let obst2 = {radius:40, x: spellMove2[i].x + 20, y: 300}
+    let obst1 = {radius:30, x: playX, y: playY}
+    let obst2 = {radius:30, x: spellMove2[i].x + 23, y: 100}
 
     let distx = obst1.x - obst2.x
     let disty = obst1.y - obst2.y
@@ -109,17 +109,17 @@ function animate () {
 for (let i=0; i<spellMove3.length; i++) {
   ctx.drawImage(spell, spellMove3[i].x, spellMove3[i].y, 120, 120)
 
-  spellMove3[i].x = spellMove3[i].x - (spellSpeed + 3)
+  spellMove3[i].x = spellMove3[i].x - (spellSpeed + 2) * 2
 
 if (spellMove3[i].x <= 8 && spellMove3[i].x > 0) {
   score++
 }
 if (spellMove3[i].x < -200) {
-  spellMove3[i] = {x: 3000, y: 400}
+  spellMove3[i] = {x: 3000, y: 300}
 }
 
-let obst1 = {radius:40, x: playX, y: playY}
-let obst2 = {radius:40, x: spellMove3[i].x + 20, y: 400}
+let obst1 = {radius:30, x: playX, y: playY}
+let obst2 = {radius:30, x: spellMove3[i].x + 23, y: 300}
 
 let distx = obst1.x - obst2.x
 let disty = obst1.y - obst2.y
@@ -194,9 +194,9 @@ function lose() {
 
   playX= 70
   playY= 200
-  spellMove1 = [{x: myCanvas.width, y: myCanvas.height -230}]
-  spellMove2 = [{x: myCanvas.width, y: 200}]
-  spellMove3 = [{x: myCanvas.width, y: 300}]
+  spellMove1 = [{x: myCanvas.width, y: myCanvas.height -330}]
+  spellMove2 = [{x: myCanvas.width, y: 100}]
+  spellMove3 = [{x: myCanvas.width, y: 350}]
   let Score = document.querySelector(".gameOver h2")
 Score.innerHTML = `Score: ${score}`
 }

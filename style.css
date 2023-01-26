@@ -4,7 +4,7 @@ body, html {
     height: 85%;
     text-align: center;
     display:block;
-    background-image: url("../Images/Background/red-background-display-your-product.jpg");
+    background-image: url("./Images/Background/red.jpg");
   }
 
   a { 
@@ -103,7 +103,7 @@ body, html {
     text-align: center;
     display:block;
     height: 139%;
-    background-image: url("../Images/Background/purple-background.jpg");
+    background-image: url("./Images/Background/purple.jpg");
   }
 
   .restart {
