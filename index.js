@@ -15,24 +15,30 @@ player.src = './Images/Wanda/WandaPresent.png'
 const spell = new Image()
 spell.src = './Images/Fireballs/Purple.png'
 
+let backsound = new Audio('./Sound/backsound.mp3')
+backsound.volume = 0.5
+let evilL = new Audio('./Sound/evilL.mp3')
+evilL.volume = 0.5
+
 let backgroundy = 0
 let backgroundy2 = -myCanvas.width
 
 let playX = 70
 let playY = 200
-let playSpeed = 3
+let playSpeed = 1.5
 
 let isMoveLeft = false
 let isMoveRight = false
 let isMoveUp = false
 let isMoveDown = false
 let isNotMove = true
-let spellSpeed = 5
+
 
 let score = 0
 let animateId
 let intervalId = 0
 
+let spellSpeed = 6
 let spellMove1 = [{x: myCanvas.width, y: myCanvas.height -330}]
 let spellMove2 = [{x: myCanvas.width + 1800, y: 100}]
 let spellMove3 = [{x: myCanvas.width + 2400, y: 350}]
@@ -61,7 +67,7 @@ function animate () {
     for (let i=0; i<spellMove1.length; i++) {
       ctx.drawImage(spell, spellMove1[i].x, spellMove1[i].y, 120, 120)
 
-      spellMove1[i].x = spellMove1[i].x - spellSpeed
+      spellMove1[i].x = spellMove1[i].x - (spellSpeed * 2)
     
     if (spellMove1[i].x <= 8 && spellMove1[i].x > 0) {
       score++
@@ -85,7 +91,7 @@ function animate () {
     for (let i=0; i<spellMove2.length; i++) {
       ctx.drawImage(spell, spellMove2[i].x, spellMove2[i].y, 120, 120)
 
-      spellMove2[i].x = spellMove2[i].x - (spellSpeed + 2)
+      spellMove2[i].x = spellMove2[i].x - (spellSpeed + 3)
     
     if (spellMove2[i].x <= 8 && spellMove2[i].x > 0) {
       score++
@@ -104,32 +110,31 @@ function animate () {
     if (distance < obst1.radius + obst2.radius) {
       gameOver = true
     }
-  }
+    }
 //3rd spell
-for (let i=0; i<spellMove3.length; i++) {
-  ctx.drawImage(spell, spellMove3[i].x, spellMove3[i].y, 120, 120)
+    for (let i=0; i<spellMove3.length; i++) {
+      ctx.drawImage(spell, spellMove3[i].x, spellMove3[i].y, 120, 120)
 
-  spellMove3[i].x = spellMove3[i].x - (spellSpeed + 2) * 2
+      spellMove3[i].x = spellMove3[i].x - (spellSpeed + 2) * 2
 
-if (spellMove3[i].x <= 8 && spellMove3[i].x > 0) {
+    if (spellMove3[i].x <= 8 && spellMove3[i].x > 0) {
   score++
-}
-if (spellMove3[i].x < -200) {
-  spellMove3[i] = {x: 3000, y: 300}
-}
+    }
+    if (spellMove3[i].x < -200) {
+    spellMove3[i] = {x: 3000, y: 400}
+    }
 
-let obst1 = {radius:30, x: playX, y: playY}
-let obst2 = {radius:30, x: spellMove3[i].x + 23, y: 300}
+    let obst1 = {radius:30, x: playX, y: playY}
+    let obst2 = {radius:30, x: spellMove3[i].x + 23, y: 400}
 
-let distx = obst1.x - obst2.x
-let disty = obst1.y - obst2.y
-let distance = Math.sqrt(distx * distx + disty * disty)
+    let distx = obst1.x - obst2.x
+    let disty = obst1.y - obst2.y
+    let distance = Math.sqrt(distx * distx + disty * disty)
 
-if (distance < obst1.radius + obst2.radius) {
-  gameOver = true
-}
-}
-
+    if (distance < obst1.radius + obst2.radius) {
+    gameOver = true
+    }
+    }
 
     if (isMoveLeft && playX > -10) {
         playX -= playSpeed
@@ -145,12 +150,12 @@ if (distance < obst1.radius + obst2.radius) {
         playY = 170
       }
 
-  ctx.font = "60px Georgia";
-  ctx.fillStyle = "#B90F0F";
-  ctx.fillText(`Score: ${score}`,
-  myCanvas.width / 2 - 100,
-  myCanvas.height - 500
-  )
+      ctx.font = "60px Georgia";
+      ctx.fillStyle = "#B90F0F";
+      ctx.fillText(`Score: ${score}`,
+      myCanvas.width / 2 - 100,
+      myCanvas.height - 500
+      )
       
       if (gameOver){
         cancelAnimationFrame(intervalId)
@@ -182,7 +187,7 @@ if (distance < obst1.radius + obst2.radius) {
           isMoveUp = false
           isMoveDown = false
         })
-    
+
 }
 
 function lose() {
@@ -191,14 +196,16 @@ function lose() {
   startBtn.style.display = "none"
   restartBtn.style.display = ""
   document.querySelector('.gameOver').style.display = 'block'
+  backsound.pause()
+  evilL.play()
 
   playX= 70
   playY= 200
   spellMove1 = [{x: myCanvas.width, y: myCanvas.height -330}]
-  spellMove2 = [{x: myCanvas.width, y: 100}]
-  spellMove3 = [{x: myCanvas.width, y: 350}]
+  spellMove2 = [{x: myCanvas.width + 1800, y:100}]
+  spellMove3 = [{x: myCanvas.width + 2400, y: 350}]
   let Score = document.querySelector(".gameOver h2")
-Score.innerHTML = `Score: ${score}`
+  Score.innerHTML = `Score: ${score}`
 }
 
 
@@ -206,6 +213,8 @@ Score.innerHTML = `Score: ${score}`
 
 function startGame() {
   animate()
+  backsound.play()
+  evilL.pause()
   document.querySelector('.menu').style.display = 'none'
   canva.style.display='flex'
   document.querySelector('.gameOver').style.display = 'none'
@@ -225,6 +234,7 @@ window.addEventListener('load', () => {
 
     document.getElementById('restart').onclick = () => {
       startGame()
+
 
   }
 })
