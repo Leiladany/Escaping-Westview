@@ -16,9 +16,9 @@ const spell = new Image()
 spell.src = './Images/Fireballs/Purple.png'
 
 let backsound = new Audio('./Sound/backsound.mp3')
-backsound.volume = 0.5
+backsound.volume = 0.3
 let evilL = new Audio('./Sound/evilL.mp3')
-evilL.volume = 0.5
+evilL.volume = 0.3
 
 let backgroundy = 0
 let backgroundy2 = -myCanvas.width
