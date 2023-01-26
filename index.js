@@ -25,7 +25,7 @@ let backgroundy2 = -myCanvas.width
 
 let playX = 70
 let playY = 200
-let playSpeed = 1.5
+let playSpeed = 1
 
 let isMoveLeft = false
 let isMoveRight = false
@@ -38,7 +38,7 @@ let score = 0
 let animateId
 let intervalId = 0
 
-let spellSpeed = 6
+let spellSpeed = 3
 let spellMove1 = [{x: myCanvas.width, y: myCanvas.height -330}]
 let spellMove2 = [{x: myCanvas.width + 1800, y: 100}]
 let spellMove3 = [{x: myCanvas.width + 2400, y: 350}]
@@ -77,7 +77,7 @@ function animate () {
     }
 
     let obst1 = {radius:30, x: playX, y: playY}
-    let obst2 = {radius:30, x: spellMove1[i].x + 23, y: 200}
+    let obst2 = {radius:50, x: spellMove1[i].x + 23, y: 200}
 
     let distx = obst1.x - obst2.x
     let disty = obst1.y - obst2.y
@@ -101,7 +101,7 @@ function animate () {
     }
 
     let obst1 = {radius:30, x: playX, y: playY}
-    let obst2 = {radius:30, x: spellMove2[i].x + 23, y: 100}
+    let obst2 = {radius:50, x: spellMove2[i].x + 23, y: 100}
 
     let distx = obst1.x - obst2.x
     let disty = obst1.y - obst2.y
@@ -115,7 +115,7 @@ function animate () {
     for (let i=0; i<spellMove3.length; i++) {
       ctx.drawImage(spell, spellMove3[i].x, spellMove3[i].y, 120, 120)
 
-      spellMove3[i].x = spellMove3[i].x - (spellSpeed + 2) * 2
+      spellMove3[i].x = spellMove3[i].x - (spellSpeed * 2)
 
     if (spellMove3[i].x <= 8 && spellMove3[i].x > 0) {
   score++
@@ -125,7 +125,7 @@ function animate () {
     }
 
     let obst1 = {radius:30, x: playX, y: playY}
-    let obst2 = {radius:30, x: spellMove3[i].x + 23, y: 400}
+    let obst2 = {radius:50, x: spellMove3[i].x + 23, y: 400}
 
     let distx = obst1.x - obst2.x
     let disty = obst1.y - obst2.y
