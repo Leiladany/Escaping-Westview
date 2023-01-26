@@ -18,7 +18,6 @@ Escaping Westview is a game inspired by the Marvel series "WandaVision" in which
 
 ## Backlog
 
-- Make more dificult
 
 # Data structure
 
