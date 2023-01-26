@@ -93,7 +93,7 @@ function animate () {
     for (let i=0; i<spellMove2.length; i++) {
       ctx.drawImage(spell, spellMove2[i].x, spellMove2[i].y, 120, 120)
 
-      spellMove2[i].x = spellMove2[i].x - (spellSpeed + 3)
+      spellMove2[i].x = spellMove2[i].x - (spellSpeed + 1)
     
     if (spellMove2[i].x <= 8 && spellMove2[i].x > 0) {
       score++
@@ -117,7 +117,7 @@ function animate () {
     for (let i=0; i<spellMove3.length; i++) {
       ctx.drawImage(spell, spellMove3[i].x, spellMove3[i].y, 120, 120)
 
-      spellMove3[i].x = spellMove3[i].x - (spellSpeed + 1)
+      spellMove3[i].x = spellMove3[i].x - spellSpeed
 
     if (spellMove3[i].x <= 8 && spellMove3[i].x > 0) {
   score++
@@ -142,7 +142,7 @@ function animate () {
     for (let i=0; i<spellMove4.length; i++) {
       ctx.drawImage(spell, spellMove4[i].x, spellMove4[i].y, 120, 120)
 
-      spellMove4[i].x = spellMove4[i].x - spellSpeed
+      spellMove4[i].x = spellMove4[i].x - (spellSpeed + 2)
 
     if (spellMove4[i].x <= 8 && spellMove4[i].x > 0) {
   score++
@@ -167,7 +167,7 @@ function animate () {
     for (let i=0; i<spellMove5.length; i++) {
       ctx.drawImage(spell, spellMove5[i].x, spellMove5[i].y, 120, 120)
 
-      spellMove5[i].x = spellMove5[i].x - (spellSpeed + 1)
+      spellMove5[i].x = spellMove5[i].x - spellSpeed
 
     if (spellMove5[i].x <= 9 && spellMove5[i].x > 0) {
   score++
@@ -188,12 +188,12 @@ function animate () {
     }
     }
 
-    if (score >= 10) {
-      spellSpeed = 6;
-    } else if (score >= 6) {
+    if (score >= 20) {
+      spellSpeed = 8;
+    } else if (score >= 15) {
+      spellSpeed = 7;
+    } else if (score >= 10) {
       spellSpeed = 5;
-    } else if (score >= 3) {
-      spellSpeed = 4;
     } else {
       spellSpeed = 3;
     }
@@ -205,7 +205,7 @@ function animate () {
         playX = 0
       }
 
-      if (isMoveUp && playY > 0) {
+      if (isMoveUp && playY > 60) {
         playY -= playSpeed
       } else if (isMoveDown && playY < 420) {playY += playSpeed
       } else if (isNotMove) {

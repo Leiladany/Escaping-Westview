@@ -96,6 +96,7 @@ body, html {
   canvas {
     margin-left: 32px;
     margin-top:20px;
+    display: flex;
   
   }
 
