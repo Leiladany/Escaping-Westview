@@ -71,7 +71,7 @@ function animate () {
 
       spellMove1[i].x = spellMove1[i].x - spellSpeed
     
-    if (spellMove1[i].x <= 12 && spellMove1[i].x > 0) {
+    if (spellMove1[i].x <= 7 && spellMove1[i].x > 0) {
       score++
     }
     if (spellMove1[i].x < -200) {
@@ -95,7 +95,7 @@ function animate () {
 
       spellMove2[i].x = spellMove2[i].x - (spellSpeed + 1)
     
-    if (spellMove2[i].x <= 12 && spellMove2[i].x > 0) {
+    if (spellMove2[i].x <= 7 && spellMove2[i].x > 0) {
       score++
     }
     if (spellMove2[i].x < -200) {
@@ -119,7 +119,7 @@ function animate () {
 
       spellMove3[i].x = spellMove3[i].x - spellSpeed
 
-    if (spellMove3[i].x <= 12 && spellMove3[i].x > 0) {
+    if (spellMove3[i].x <= 10 && spellMove3[i].x > 0) {
   score++
     }
     if (spellMove3[i].x < -200) {
@@ -144,7 +144,7 @@ function animate () {
 
       spellMove4[i].x = spellMove4[i].x - spellSpeed
 
-    if (spellMove4[i].x <= 12 && spellMove4[i].x > 0) {
+    if (spellMove4[i].x <= 7 && spellMove4[i].x > 0) {
   score++
     }
     if (spellMove4[i].x < -200) {
@@ -169,7 +169,7 @@ function animate () {
 
       spellMove5[i].x = spellMove5[i].x - (spellSpeed +1)
 
-    if (spellMove5[i].x <= 12 && spellMove5[i].x > 0) {
+    if (spellMove5[i].x <= 7 && spellMove5[i].x > 0) {
   score++
     }
     if (spellMove5[i].x < -200) {
