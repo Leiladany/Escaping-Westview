@@ -2,16 +2,15 @@ body,
 html {
   text-align: center;
   background-image: url("./Images/Background/red.jpg");
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
-  -o-background-size: cover;
   background-size: cover;
+  background-position: center;
   width: auto;
-  height: auto;
+  height: 100%;
+  background-repeat: no-repeat;
 }
 
 a {
-  color: rgb(118, 25, 25);
+  color: rgb(90, 19, 19);
   font-size: 15px;
 }
 
@@ -24,7 +23,8 @@ a {
 
 .logo-img {
   height: 100%;
-  margin-top: 50px;
+  margin-top: 40px;
+  margin-bottom: 20px;
   width: 40%;
   animation: logoAnim 15s ease 1ms 1 normal forwards;
 }
@@ -67,9 +67,8 @@ a {
 
 #link1 {
   font-size: 15px;
-  color: rgb(118, 25, 25);
-  padding-top: 115px;
-  margin-top: 43px;
+  color: rgb(90, 19, 19);
+  padding-top: 118px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -117,9 +116,12 @@ button {
 }
 
 canvas {
-  margin-left: 32px;
-  margin-top: 20px;
   display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 70%;
+  margin: auto;
 }
 
 .gameOver {
