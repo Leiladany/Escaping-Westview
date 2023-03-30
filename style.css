@@ -1,141 +1,147 @@
-body, html {
-    text-align: center;
-    background-image: url("./Images/Background/red.jpg");
-    -webkit-background-size: cover;
+body,
+html {
+  text-align: center;
+  background-image: url("./Images/Background/red.jpg");
+  -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
   background-size: cover;
   width: auto;
   height: auto;
+}
+
+a {
+  color: rgb(118, 25, 25);
+  font-size: 15px;
+}
+
+.inst {
+  font-size: 18px;
+  font-family: "Bahnschrift SemiBold";
+  color: black;
+  width: fit-content;
+}
+
+.logo-img {
+  height: 100%;
+  margin-top: 50px;
+  width: 40%;
+  animation: logoAnim 15s ease 1ms 1 normal forwards;
+}
+
+.box1 {
+  border-color: black;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #c8c3ccb3;
+  width: 50%;
+  margin: auto;
+  border: 4px solid;
+  border-radius: 21px;
+}
+
+.intro button {
+  font-size: 30px;
+  font-family: "Bahnschrift SemiBold";
+  text-shadow: -1px 0 rgb(171, 28, 28), 0 1px rgb(171, 28, 28), 1px 0 black,
+    0 -1px black;
+  background-color: black;
+  color: rgb(99, 91, 91);
+  padding: 10px 20px;
+  border: 2;
+  border-color: rgb(171, 28, 28);
+  box-shadow: 0;
+  border-radius: 20px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.gameOver p {
+  padding-top: 20px;
+  font-size: 25px;
+  color: rgb(81, 10, 128);
+  text-shadow: 0 0 3px #a05ac5, 0 0 5px #9076ab;
+}
+
+#link1 {
+  font-size: 15px;
+  color: rgb(118, 25, 25);
+  padding-top: 115px;
+  margin-top: 43px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 50%;
+  margin: auto;
+}
+
+#link2 {
+  font-size: 15px;
+  padding-top: 100px;
+}
+
+.gameOver a {
+  font-size: 15px;
+  color: rgb(81, 10, 128);
+  text-shadow: 0 0 3px #a05ac5, 0 0 5px #9076ab;
+}
+
+h2 {
+  font-size: 50px;
+}
+
+h1 {
+  margin: 0;
+  font-size: 80px;
+  padding-top: 70px;
+  color: rgb(113, 10, 182);
+  text-shadow: 0 0 3px #c995e5, 0 0 5px #aba7af;
+}
+
+button {
+  font-size: 30px;
+  font-family: "Bahnschrift SemiBold";
+  text-shadow: -1px 0 rgb(88, 28, 171), 0 1px rgb(136, 49, 152),
+    1px 0 rgb(135, 16, 129), 0 -1px black;
+  background-color: rgb(0, 0, 0);
+  color: rgb(88, 28, 171), 1px 0 rgb(61, 24, 163);
+  padding: 10px 20px;
+  border: 2;
+  border-color: rgb(104, 53, 175);
+  box-shadow: 0;
+  border-radius: 20px;
+  margin-bottom: 20px;
+}
+
+canvas {
+  margin-left: 32px;
+  margin-top: 20px;
+  display: flex;
+}
+
+.gameOver {
+  text-align: center;
+  display: block;
+  height: 139%;
+  background-image: url("./Images/Background/purple.jpg");
+}
+
+.restart {
+  margin: 300;
+}
+
+@keyframes logoAnim {
+  0%,
+  50%,
+  100% {
+    opacity: 1;
   }
 
-  a { 
-    color: rgb(118, 25, 25) ;
-    font-size: 15px;
+  25%,
+  75% {
+    opacity: 0;
   }
-  
-  .inst {
-    font-size: 18px;
-    font-family: 'Bahnschrift SemiBold';
-    color: black;
-    width: fit-content;
-  }
-  
-  .logo-img {
-    height: 100%;
-    margin-top: 50px;
-    width: 40%;
-    animation: logoAnim 15s ease 1ms 1 normal forwards;
-  }
-
-  .box1 {
-    border-color: black;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    background-color: #c8c3ccb3;
-    width: 50%;
-    margin: auto;
-    border: 4px solid;
-    border-radius: 21px;
-  }
-  
-  .intro button {
-    font-size: 30px;
-    font-family: 'Bahnschrift SemiBold';
-    text-shadow: -1px 0 rgb(171, 28, 28), 0 1px rgb(171, 28, 28), 1px 0 black, 0 -1px black;
-    background-color: black;
-    color: rgb(99, 91, 91);
-    padding: 10px 20px;
-    border: 2;
-    border-color: rgb(171, 28, 28);
-    box-shadow: 0;
-    border-radius: 20px;
-    margin-top: 20px;
-    margin-bottom: 20px;
-    
-  }
-
-  .gameOver p {
-    padding-top: 20px;
-    font-size: 25px;
-    color:rgb(81, 10, 128);
-    text-shadow: 0 0 3px #a05ac5, 0 0 5px #9076ab
-  }
-
-  #link1 {
-    font-size: 15px;
-    color:rgb(118, 25, 25);
-    padding-top: 115px;
-    margin-top: 43px;
-  }
-
-  #link2 {
-    font-size: 15px;
-    padding-top: 100px;
-  }
-
-  .gameOver a {
-    font-size: 15px;
-    color:rgb(81, 10, 128);
-    text-shadow: 0 0 3px #a05ac5, 0 0 5px #9076ab
-  }
-
-  h2 {
-    font-size: 50px;
-  }
-
-  h1 {
-    margin: 0;
-    font-size: 80px;
-    padding-top: 70px;
-    color: rgb(113, 10, 182);
-    text-shadow: 0 0 3px #c995e5, 0 0 5px #aba7af;
-  }
-
-  button {
-    font-size: 30px;
-    font-family: 'Bahnschrift SemiBold';
-    text-shadow: -1px 0 rgb(88, 28, 171), 0 1px rgb(136, 49, 152), 1px 0 rgb(135, 16, 129), 0 -1px black;
-    background-color: rgb(0, 0, 0);
-    color: rgb(88, 28, 171), 1px 0 rgb(61, 24, 163);
-    padding: 10px 20px;
-    border: 2;
-    border-color: rgb(104, 53, 175);
-    box-shadow: 0;
-    border-radius: 20px;
-    margin-bottom: 20px;
-  }
-
-  canvas {
-    margin-left: 32px;
-    margin-top:20px;
-    display: flex;
-  
-  }
-
-  .gameOver {
-    text-align: center;
-    display:block;
-    height: 139%;
-    background-image: url("./Images/Background/purple.jpg");
-  }
-
-  .restart {
-    margin: 300;
-  }
-
-  @keyframes logoAnim {
-    0%,
-    50%,
-    100% {
-      opacity: 1;
-    }
-  
-    25%,
-    75% {
-      opacity: 0;
-    }
-  }
-  
+}
