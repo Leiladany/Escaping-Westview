@@ -5,7 +5,7 @@ html {
   background-size: cover;
   background-position: center;
   width: auto;
-  height: 100%;
+  height: auto;
   background-repeat: no-repeat;
 }
 
@@ -120,8 +120,10 @@ canvas {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  width: 70%;
+  max-width: 90%;
+  margin-top: 35px !important;
   margin: auto;
+  height: auto;
 }
 
 .gameOver {
