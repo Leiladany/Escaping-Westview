@@ -259,7 +259,7 @@ function lose() {
   myCanvas.style.display = "none"
   startBtn.style.display = "none"
   restartBtn.style.display = ""
-  document.querySelector('.gameOver').style.display = 'block'
+  document.querySelector('.gameOver').style.display = 'flex'
   backsound.pause()
   evilL.play()
 
