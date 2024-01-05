@@ -15,7 +15,7 @@ a {
 }
 
 .inst {
-  font-size: 18px;
+  font-size: 12px;
   font-family: "Bahnschrift SemiBold";
   color: black;
   width: fit-content;
@@ -75,7 +75,7 @@ a {
 #link1 {
   font-size: 15px;
   color: rgb(90, 19, 19);
-  padding-top: 118px;
+  padding-top: 50px;
   display: flex;
   flex-direction: column;
   justify-content: center;

@@ -2,27 +2,34 @@ const myCanvas = document.querySelector('canvas');
 const ctx = myCanvas.getContext('2d');
 myCanvas.style.border = '8px solid #911717';
 
-const backImg = new Image()
-backImg.src = './Images/Background/newback.jpg'
+const players = [
+  './Images/Wanda/WandaPresent.png',
+  './Images/Wanda/Wanda50s.png',
+];
 
-const backImg2 = new Image()
-backImg2.src = './Images/Background/newback.jpg'
+const backgrounds = [
+  './Images/Background/newback.jpg',
+  './Images/Background/newback50.jpg',
+];
 
-const player = new Image()
-player.src = './Images/Wanda/WandaPresent.png'
+const spells = [
+  './Images/Fireballs/Purple.png',
+  './Images/Fireballs/Purple50s.png',
+];
 
-const spell = new Image()
-spell.src = './Images/Fireballs/Purple.png'
+let backsound = new Audio('./Sound/backsound.mp3');
+backsound.volume = 0.1;
+let evilL = new Audio('./Sound/evilL.mp3');
+evilL.volume = 0.1;
 
-let backsound = new Audio('./Sound/backsound.mp3')
-backsound.volume = 0.1
-let evilL = new Audio('./Sound/evilL.mp3')
-evilL.volume = 0.1
+let currentPlayerIndex = 0;
+let currentBackgroundIndex = 0;
+let currentSpellIndex = 0;
 
-let backgroundy = 0
-let backgroundy2 = -myCanvas.width
+let backgroundy = 0;
+let backgroundy2 = -myCanvas.width;
 
-let backgroundx = 0; // Change from backgroundy to backgroundx
+let backgroundx = 0;
 let playX = 70;
 let playY = 200;
 let playSpeed = 2.3;
@@ -49,6 +56,18 @@ let startBtn = document.getElementById('start-button');
 let restartBtn = document.getElementById('restart');
 let gameOver = document.querySelector("#gameOver");
 
+const player = new Image()
+player.src = players[currentPlayerIndex];
+
+const backImg = new Image()
+backImg.src = backgrounds[currentBackgroundIndex];
+
+const backImg2 = new Image()
+backImg2.src = backgrounds[currentBackgroundIndex];
+
+const spell = new Image()
+spell.src = spells[currentSpellIndex];
+
 function checkCollision(obst1, obst2) {
   const distx = obst1.x - (obst2.x + 23);
   const disty = obst1.y - obst2.y;
@@ -69,29 +88,26 @@ function getRandomY() {
 }
 
 function updateScore() {
-  score = Math.floor((Date.now() - startTime) / 1000); // Score is in seconds
+  score = Math.floor((Date.now() - startTime) / 1000);
 }
 
 function increaseSpeed() {
   if (score - lastSpeedIncreaseTime >= 10) {
     lastSpeedIncreaseTime = score;
-    spellSpeed += 2; // Increase spell speed every 10 seconds
+    spellSpeed += 2;
   }
 }
 
 function animate() {
   ctx.clearRect(0, 0, myCanvas.width, myCanvas.height);
 
-  // Draw the background multiple times
   ctx.drawImage(backImg, backgroundy, 0, myCanvas.width, myCanvas.height);
   ctx.drawImage(backImg2, backgroundy2, 0, myCanvas.width, myCanvas.height);
 
-  // Move the background
   backgroundx -= 2;
   backgroundy += 2;
   backgroundy2 += 2;
 
-  // Reset background position if it goes beyond the canvas
   if (backgroundx <= -myCanvas.width) {
     backgroundx = 0;
   }
@@ -104,13 +120,11 @@ function animate() {
     backgroundy2 = -myCanvas.width;
   }
 
-    // Draw the player
-    ctx.drawImage(player, playX, playY, 125, 125);
+  ctx.drawImage(player, playX, playY, 125, 125);
 
   updateScore();
   increaseSpeed();
 
-  // Draw and update spells
   for (let i = 0; i < 5; i++) {
     const currentSpellMove = eval(`spellMove${i + 1}`);
     const currentSpell = currentSpellMove[0];
@@ -130,7 +144,6 @@ function animate() {
     }
   }
 
-  // Handle player movement
   if (isMoveLeft && playX > -10) {
     playX -= playSpeed;
   } else if (isMoveRight && playX < 1000) {
@@ -147,7 +160,6 @@ function animate() {
     playY = 170;
   }
 
-  // Display the score
   ctx.font = "60px Georgia";
   ctx.fillStyle = "#B90F0F";
   ctx.fillText(`Time: ${score}s`, myCanvas.width / 2 - 100, myCanvas.height - 500);
@@ -160,7 +172,6 @@ function animate() {
   }
 }
 
-// Move these event listeners outside the animate function
 document.addEventListener('keypress', (event) => {
   if (event.key === 'a') {
     isMoveLeft = true;
@@ -192,26 +203,21 @@ function lose() {
   backsound.pause();
   evilL.play();
 
-  // Reset player and spells for the next game
   playX = 70;
   playY = 200;
   initializeSpells();
 
-  // Reset game over flag
   gameOver = false;
 
-  // Display the final score
   let Score = document.querySelector(".gameOver h2");
   Score.innerHTML = `Time: ${score}s`;
 }
 
 function restartGame() {
-  // Reset background position
   backgroundx = 0;
   backgroundy = 0;
   backgroundy2 = -myCanvas.width;
 
-  // Reset other game variables
   playX = 70;
   playY = 200;
   isMoveLeft = false;
@@ -224,16 +230,13 @@ function restartGame() {
   spellSpeed = 4;
   lastSpeedIncreaseTime = 0;
 
-  // Clear the canvas
   ctx.clearRect(0, 0, myCanvas.width, myCanvas.height);
 
-  // Show necessary elements
   myCanvas.style.display = 'block';
   startBtn.style.display = 'none';
   restartBtn.style.display = 'none';
   document.querySelector('.gameOver').style.display = 'none';
 
-  // Start the game again
   animate();
 }
 
