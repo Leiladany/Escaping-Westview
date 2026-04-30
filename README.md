@@ -1,58 +1,27 @@
-Escaping Westview
+# Escaping Westview
 
-## Description
+Escaping Westview is a small browser game inspired by WandaVision. The player
+guides Wanda through Westview while dodging Agatha's incoming spells. The longer
+the player survives, the faster the spells become.
 
-Escaping Westview is a game inspired by the Marvel series "WandaVision" in which the player has to dodge the spells of the witch Agatha Harkness by moving up, down and sideways. The game ends when you are hit by one of the spells, showing at the end the number of spells you dodged.
+## How to Play
 
-## MVP (DOM - Canvas)
+- Start the game from the menu.
+- Move with WASD, arrow keys, or the on-screen controls.
+- Avoid the incoming spells for as long as possible.
+- Restart from the game-over screen after getting caught.
 
-- Start screen
-- Start game button
-- Player is in the left side of the screen
-- Spells come from the right
-- A count of how many spells dodged
-- Loses when hit by spells
-- Lose screen
-- Total of spells dodged
-- Restart button
+## Project Structure
 
-## Backlog
-
-
-# Data structure
-
-- Menu screen
-- Game screen
-- Lose menu screen
-
-- Game
-- Collision
-- Counter
-- Obstacles
-- GameOver
-- Move player
-
-
-## States y States Transitions
-
-- Menu screen
-- GameScreen
-- Game over screen
-
-## Task
-
-- Build DOM
-- Build menu screen
-- Add start button
-- Build game screen
-- Build player
-- Player moves
-- Build obstacles
-- Collison with obstacles
-- addEventListener
+- `index.html` - screen structure for the menu, game, and game-over states.
+- `style.css` - responsive layout, theme styling, HUD, and touch controls.
+- `index.js` - canvas rendering, game state, movement, collision, scoring, audio,
+  and screen transitions.
+- `images/` - character, background, spell, and logo assets.
+- `sound/` - background and game-over audio.
 
 ## Links
 
-- [Slides Link] (https://docs.google.com/presentation/d/1Kl6EAXFMHPGpn-14FDCvp9nrF8mM61t_HrhEfYQ6Cw0/edit?usp=sharing)
-- Github repository Link] (https://github.com/Leiladany/Escaping-Westview.git)
-- [Deployment Link] (https://leiladany.github.io/Escaping-Westview/)
+- [Slides](https://docs.google.com/presentation/d/1Kl6EAXFMHPGpn-14FDCvp9nrF8mM61t_HrhEfYQ6Cw0/edit?usp=sharing)
+- [GitHub repository](https://github.com/Leiladany/Escaping-Westview.git)
+- [Deployment](https://leiladany.github.io/Escaping-Westview/)

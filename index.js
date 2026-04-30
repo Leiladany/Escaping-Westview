@@ -1,268 +1,654 @@
-const myCanvas = document.querySelector('canvas');
-const ctx = myCanvas.getContext('2d');
-myCanvas.style.border = '8px solid #911717';
+const SCREEN = {
+  MENU: 'menu',
+  GAME: 'game',
+  GAME_OVER: 'gameOver',
+};
 
-const players = [
-  './Images/Wanda/WandaPresent.png',
-  './Images/Wanda/Wanda50s.png',
-];
+const STORAGE_KEY = 'escapingWestviewBestScore';
 
-const backgrounds = [
-  './Images/Background/newback.jpg',
-  './Images/Background/newback50.jpg',
-];
+const ASSETS = {
+  players: [
+    './images/wanda/wanda-present.png',
+    './images/wanda/wanda-50s.png',
+  ],
+  backgrounds: [
+    './images/background/new-back.jpg',
+    './images/background/new-back-50.jpg',
+  ],
+  spells: [
+    './images/fireballs/purple.png',
+    './images/fireballs/purple-50s.png',
+  ],
+};
 
-const spells = [
-  './Images/Fireballs/Purple.png',
-  './Images/Fireballs/Purple50s.png',
-];
+const CONFIG = {
+  obstacleCount: 5,
+  difficultyInterval: 8,
+  phaseDuration: 20,
+  maxDeltaTime: 0.05,
+  player: {
+    minSize: 70,
+    maxSize: 125,
+    speedMin: 300,
+    speedScale: 0.42,
+    hitboxScale: 0.34,
+  },
+  spell: {
+    minSize: 64,
+    maxSize: 120,
+    hitboxScale: 0.34,
+  },
+  obstacle: {
+    baseSpeedMin: 185,
+    baseSpeedScale: 0.24,
+    speedStepMin: 36,
+    speedStepScale: 0.055,
+    maxSpeedMin: 560,
+    maxSpeedScale: 0.72,
+    spawnGapMin: 220,
+    spawnGapScale: 0.35,
+  },
+  backgroundSpeedScale: 0.25,
+};
 
-let backsound = new Audio('./Sound/backsound.mp3');
-backsound.volume = 0.1;
-let evilL = new Audio('./Sound/evilL.mp3');
-evilL.volume = 0.1;
+const menuScreen = document.getElementById('menu-screen');
+const gameScreen = document.getElementById('game-screen');
+const gameOverScreen = document.getElementById('game-over-screen');
+const startButton = document.getElementById('start-button');
+const restartButton = document.getElementById('restart-button');
+const homeButton = document.getElementById('home-button');
+const soundButton = document.getElementById('sound-button');
+const caughtSoundButton = document.getElementById('caught-sound-button');
+const scoreDisplay = document.getElementById('score-display');
+const bestScoreDisplay = document.getElementById('best-score-display');
+const finalTimeDisplay = document.getElementById('final-time');
+const canvas = document.getElementById('game-canvas');
+const ctx = canvas.getContext('2d');
 
-let currentPlayerIndex = 0;
-let currentBackgroundIndex = 0;
-let currentSpellIndex = 0;
+const images = {
+  players: [],
+  backgrounds: [],
+  spells: [],
+};
 
-let backgroundy = 0;
-let backgroundy2 = -myCanvas.width;
+const audio = {
+  background: new Audio('./sound/back-sound.mp3'),
+  lose: new Audio('./sound/evil-l.mp3'),
+  muted: false,
+};
 
-let backgroundx = 0;
-let playX = 70;
-let playY = 200;
-let playSpeed = 2.3;
+audio.background.loop = true;
+audio.background.volume = 0.12;
+audio.lose.volume = 0.16;
 
-let isMoveLeft = false;
-let isMoveRight = false;
-let isMoveUp = false;
-let isMoveDown = false;
-let isNotMove = true;
+const game = {
+  width: 1200,
+  height: 550,
+};
 
-let startTime = 0;
-let score = 0;
-let intervalId = 0;
-let spellSpeed = 4;
-let lastSpeedIncreaseTime = 0;
+const keyboardControls = new Set();
+const pointerControls = new Set();
 
-let spellMove1 = [];
-let spellMove2 = [];
-let spellMove3 = [];
-let spellMove4 = [];
-let spellMove5 = [];
+let state = null;
+let frameId = null;
+let bestScore = getStoredBestScore();
 
-let startBtn = document.getElementById('start-button');
-let restartBtn = document.getElementById('restart');
-let gameOver = document.querySelector("#gameOver");
-
-const player = new Image()
-player.src = players[currentPlayerIndex];
-
-const backImg = new Image()
-backImg.src = backgrounds[currentBackgroundIndex];
-
-const backImg2 = new Image()
-backImg2.src = backgrounds[currentBackgroundIndex];
-
-const spell = new Image()
-spell.src = spells[currentSpellIndex];
-
-function checkCollision(obst1, obst2) {
-  const distx = obst1.x - (obst2.x + 23);
-  const disty = obst1.y - obst2.y;
-  const distance = Math.sqrt(distx * distx + disty * disty);
-  return distance < obst1.radius + obst2.radius;
+function clamp(value, min, max) {
+  return Math.min(Math.max(value, min), max);
 }
 
-function initializeSpells() {
-  spellMove1 = [{ x: myCanvas.width, y: getRandomY() }];
-  spellMove2 = [{ x: myCanvas.width + 1800, y: getRandomY() }];
-  spellMove3 = [{ x: myCanvas.width + 2400, y: getRandomY() }];
-  spellMove4 = [{ x: myCanvas.width + 1000, y: getRandomY() }];
-  spellMove5 = [{ x: myCanvas.width + 1000, y: getRandomY() }];
+function randomBetween(min, max) {
+  return Math.random() * (max - min) + min;
 }
 
-function getRandomY() {
-  return Math.floor(Math.random() * myCanvas.height);
+function loadImage(src) {
+  return new Promise((resolve) => {
+    const image = new Image();
+    image.onload = () => resolve(image);
+    image.onerror = () => resolve(null);
+    image.src = src;
+  });
 }
 
-function updateScore() {
-  score = Math.floor((Date.now() - startTime) / 1000);
+async function loadAssets() {
+  const [players, backgrounds, spells] = await Promise.all([
+    Promise.all(ASSETS.players.map(loadImage)),
+    Promise.all(ASSETS.backgrounds.map(loadImage)),
+    Promise.all(ASSETS.spells.map(loadImage)),
+  ]);
+
+  images.players = players;
+  images.backgrounds = backgrounds;
+  images.spells = spells;
 }
 
-function increaseSpeed() {
-  if (score - lastSpeedIncreaseTime >= 10) {
-    lastSpeedIncreaseTime = score;
-    spellSpeed += 2;
+function resizeCanvas() {
+  const bounds = canvas.getBoundingClientRect();
+  const width = Math.max(320, Math.round(bounds.width || 1200));
+  const height = Math.max(280, Math.round(bounds.height || 550));
+  const pixelRatio = window.devicePixelRatio || 1;
+
+  game.width = width;
+  game.height = height;
+
+  canvas.width = Math.round(width * pixelRatio);
+  canvas.height = Math.round(height * pixelRatio);
+  ctx.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
+}
+
+function getPlayerSize() {
+  if (isMobileViewport()) {
+    return clamp(game.height * 0.18, 48, 86);
+  }
+
+  return clamp(game.height * 0.23, CONFIG.player.minSize, CONFIG.player.maxSize);
+}
+
+function getSpellSize() {
+  if (isMobileViewport()) {
+    return clamp(game.height * 0.16, 42, 72);
+  }
+
+  return clamp(game.height * 0.22, CONFIG.spell.minSize, CONFIG.spell.maxSize);
+}
+
+function isMobileViewport() {
+  return window.matchMedia('(max-width: 680px)').matches || game.width <= 680;
+}
+
+function getPlayerSpeed() {
+  return Math.max(CONFIG.player.speedMin, game.width * CONFIG.player.speedScale);
+}
+
+function getObstacleSpeed() {
+  if (!state) {
+    return CONFIG.obstacle.baseSpeedMin;
+  }
+
+  const level = Math.floor(state.elapsed / CONFIG.difficultyInterval);
+  const baseSpeed = Math.max(
+    CONFIG.obstacle.baseSpeedMin,
+    game.width * CONFIG.obstacle.baseSpeedScale
+  );
+  const speedStep = Math.max(
+    CONFIG.obstacle.speedStepMin,
+    game.width * CONFIG.obstacle.speedStepScale
+  );
+  const maxSpeed = Math.max(
+    CONFIG.obstacle.maxSpeedMin,
+    game.width * CONFIG.obstacle.maxSpeedScale
+  );
+
+  return Math.min(baseSpeed + level * speedStep, maxSpeed);
+}
+
+function getPhaseIndex() {
+  const phases = Math.max(images.players.length, 1);
+  const elapsed = state ? state.elapsed : 0;
+  return Math.floor(elapsed / CONFIG.phaseDuration) % phases;
+}
+
+function getRandomSpellY() {
+  const size = getSpellSize();
+  const padding = Math.max(12, game.height * 0.03);
+  return randomBetween(padding, Math.max(padding, game.height - size - padding));
+}
+
+function createObstacles() {
+  const gap = Math.max(
+    CONFIG.obstacle.spawnGapMin,
+    game.width * CONFIG.obstacle.spawnGapScale
+  );
+
+  return Array.from({ length: CONFIG.obstacleCount }, (_, index) => ({
+    x: game.width + gap * index + randomBetween(0, gap * 0.35),
+    y: getRandomSpellY(),
+    speedOffset: randomBetween(0, Math.max(18, game.width * 0.035)),
+  }));
+}
+
+function createGameState() {
+  const playerSize = getPlayerSize();
+
+  return {
+    status: SCREEN.GAME,
+    elapsed: 0,
+    score: 0,
+    lastFrameTime: null,
+    backgroundX: 0,
+    player: {
+      x: clamp(game.width * 0.07, 22, 78),
+      y: (game.height - playerSize) / 2,
+    },
+    obstacles: createObstacles(),
+  };
+}
+
+function setScreen(screen) {
+  menuScreen.hidden = screen !== SCREEN.MENU;
+  gameScreen.hidden = screen !== SCREEN.GAME;
+  gameOverScreen.hidden = screen !== SCREEN.GAME_OVER;
+}
+
+function updateScoreDisplays() {
+  const score = state ? state.score : 0;
+  scoreDisplay.textContent = `${score}s`;
+  bestScoreDisplay.textContent = `${bestScore}s`;
+}
+
+function getStoredBestScore() {
+  try {
+    const storedValue = Number(window.localStorage.getItem(STORAGE_KEY));
+    return Number.isFinite(storedValue) ? storedValue : 0;
+  } catch {
+    return 0;
   }
 }
 
-function animate() {
-  ctx.clearRect(0, 0, myCanvas.width, myCanvas.height);
+function storeBestScore(score) {
+  try {
+    window.localStorage.setItem(STORAGE_KEY, String(score));
+  } catch {
+    // Local storage can be blocked in some browser privacy modes.
+  }
+}
 
-  ctx.drawImage(backImg, backgroundy, 0, myCanvas.width, myCanvas.height);
-  ctx.drawImage(backImg2, backgroundy2, 0, myCanvas.width, myCanvas.height);
+function clearControls() {
+  keyboardControls.clear();
+  pointerControls.clear();
+  document
+    .querySelectorAll('[data-control].is-active')
+    .forEach((button) => button.classList.remove('is-active'));
+}
 
-  backgroundx -= 2;
-  backgroundy += 2;
-  backgroundy2 += 2;
+function isControlActive(control) {
+  return keyboardControls.has(control) || pointerControls.has(control);
+}
 
-  if (backgroundx <= -myCanvas.width) {
-    backgroundx = 0;
+function updatePlayer(deltaTime) {
+  const size = getPlayerSize();
+  const playerSpeed = getPlayerSpeed();
+  let dx = 0;
+  let dy = 0;
+
+  if (isControlActive('left')) {
+    dx -= 1;
+  }
+  if (isControlActive('right')) {
+    dx += 1;
+  }
+  if (isControlActive('up')) {
+    dy -= 1;
+  }
+  if (isControlActive('down')) {
+    dy += 1;
   }
 
-  if (backgroundy > myCanvas.width) {
-    backgroundy = -myCanvas.width;
+  if (dx === 0 && dy === 0) {
+    return;
   }
 
-  if (backgroundy2 > myCanvas.width) {
-    backgroundy2 = -myCanvas.width;
+  const distance = Math.hypot(dx, dy);
+  state.player.x = clamp(
+    state.player.x + (dx / distance) * playerSpeed * deltaTime,
+    0,
+    game.width - size
+  );
+  state.player.y = clamp(
+    state.player.y + (dy / distance) * playerSpeed * deltaTime,
+    0,
+    game.height - size
+  );
+}
+
+function updateObstacles(deltaTime) {
+  const speed = getObstacleSpeed();
+  const size = getSpellSize();
+
+  state.obstacles.forEach((obstacle) => {
+    obstacle.x -= (speed + obstacle.speedOffset) * deltaTime;
+
+    if (obstacle.x < -size) {
+      const farthestX = Math.max(game.width, ...state.obstacles.map((item) => item.x));
+      const gap = Math.max(
+        CONFIG.obstacle.spawnGapMin,
+        game.width * CONFIG.obstacle.spawnGapScale
+      );
+
+      obstacle.x = farthestX + randomBetween(gap, gap * 1.55);
+      obstacle.y = getRandomSpellY();
+      obstacle.speedOffset = randomBetween(0, Math.max(18, game.width * 0.035));
+    }
+  });
+}
+
+function hasCollision(obstacle) {
+  const playerSize = getPlayerSize();
+  const spellSize = getSpellSize();
+  const playerRadius = playerSize * CONFIG.player.hitboxScale;
+  const spellRadius = spellSize * CONFIG.spell.hitboxScale;
+  const playerCenter = {
+    x: state.player.x + playerSize / 2,
+    y: state.player.y + playerSize / 2,
+  };
+  const spellCenter = {
+    x: obstacle.x + spellSize / 2,
+    y: obstacle.y + spellSize / 2,
+  };
+  const distance = Math.hypot(
+    playerCenter.x - spellCenter.x,
+    playerCenter.y - spellCenter.y
+  );
+
+  return distance <= playerRadius + spellRadius;
+}
+
+function update(deltaTime) {
+  state.elapsed += deltaTime;
+  state.score = Math.floor(state.elapsed);
+  state.backgroundX -= getObstacleSpeed() * CONFIG.backgroundSpeedScale * deltaTime;
+
+  updatePlayer(deltaTime);
+  updateObstacles(deltaTime);
+  updateScoreDisplays();
+
+  if (state.obstacles.some(hasCollision)) {
+    endGame();
+  }
+}
+
+function drawFallbackBackground() {
+  const gradient = ctx.createLinearGradient(0, 0, game.width, game.height);
+  gradient.addColorStop(0, '#840001');
+  gradient.addColorStop(0.5, '#000000');
+  gradient.addColorStop(1, '#710AB6');
+  ctx.fillStyle = gradient;
+  ctx.fillRect(0, 0, game.width, game.height);
+}
+
+function drawBackground() {
+  const background = images.backgrounds[getPhaseIndex()];
+
+  if (!background) {
+    drawFallbackBackground();
+    return;
   }
 
-  ctx.drawImage(player, playX, playY, 125, 125);
+  while (state.backgroundX <= -game.width) {
+    state.backgroundX += game.width;
+  }
+  while (state.backgroundX > 0) {
+    state.backgroundX -= game.width;
+  }
 
-  updateScore();
-  increaseSpeed();
+  for (let x = state.backgroundX; x < game.width; x += game.width) {
+    ctx.drawImage(background, x, 0, game.width, game.height);
+  }
+}
 
-  for (let i = 0; i < 5; i++) {
-    const currentSpellMove = eval(`spellMove${i + 1}`);
-    const currentSpell = currentSpellMove[0];
+function drawPlayer() {
+  const size = getPlayerSize();
+  const player = images.players[getPhaseIndex()];
 
-    ctx.drawImage(spell, currentSpell.x, currentSpell.y, 120, 120);
-    currentSpell.x -= spellSpeed + i;
+  if (player) {
+    ctx.drawImage(player, state.player.x, state.player.y, size, size);
+    return;
+  }
 
-    if (currentSpell.x < -200) {
-      currentSpellMove[0] = { x: myCanvas.width, y: getRandomY() };
+  ctx.fillStyle = '#840001';
+  ctx.fillRect(state.player.x, state.player.y, size, size);
+}
+
+function drawObstacles() {
+  const size = getSpellSize();
+  const spell = images.spells[getPhaseIndex()];
+
+  state.obstacles.forEach((obstacle) => {
+    if (spell) {
+      ctx.drawImage(spell, obstacle.x, obstacle.y, size, size);
+      return;
     }
 
-    const obst1 = { radius: 30, x: playX, y: playY };
-    const obst2 = { radius: 70, x: currentSpell.x + 23, y: currentSpell.y };
+    ctx.beginPath();
+    ctx.arc(obstacle.x + size / 2, obstacle.y + size / 2, size / 2, 0, Math.PI * 2);
+    ctx.fillStyle = '#710AB6';
+    ctx.fill();
+  });
+}
 
-    if (checkCollision(obst1, obst2)) {
-      gameOver = true;
-    }
+function draw() {
+  ctx.clearRect(0, 0, game.width, game.height);
+  drawBackground();
+  drawObstacles();
+  drawPlayer();
+}
+
+function gameLoop(timestamp) {
+  if (!state || state.status !== SCREEN.GAME) {
+    return;
   }
 
-  if (isMoveLeft && playX > -10) {
-    playX -= playSpeed;
-  } else if (isMoveRight && playX < 1000) {
-    playX += playSpeed;
-  } else if (isNotMove) {
-    playX = 0;
+  if (state.lastFrameTime === null) {
+    state.lastFrameTime = timestamp;
   }
 
-  if (isMoveUp && playY > 60) {
-    playY -= playSpeed;
-  } else if (isMoveDown && playY < 420) {
-    playY += playSpeed;
-  } else if (isNotMove) {
-    playY = 170;
-  }
+  const deltaTime = Math.min(
+    (timestamp - state.lastFrameTime) / 1000,
+    CONFIG.maxDeltaTime
+  );
+  state.lastFrameTime = timestamp;
 
-  ctx.font = "60px Georgia";
-  ctx.fillStyle = "#B90F0F";
-  ctx.fillText(`Time: ${score}s`, myCanvas.width / 2 - 100, myCanvas.height - 500);
+  update(deltaTime);
 
-  if (gameOver) {
-    cancelAnimationFrame(intervalId);
-    lose();
-  } else {
-    intervalId = requestAnimationFrame(animate);
+  if (state && state.status === SCREEN.GAME) {
+    draw();
+    frameId = window.requestAnimationFrame(gameLoop);
   }
 }
 
-document.addEventListener('keypress', (event) => {
-  if (event.key === 'a') {
-    isMoveLeft = true;
-    isNotMove = false;
-  } else if (event.key === 'd') {
-    isMoveRight = true;
-    isNotMove = false;
-  } else if (event.key === 'w') {
-    isMoveUp = true;
-    isNotMove = false;
-  } else if (event.key === 's') {
-    isMoveDown = true;
-    isNotMove = false;
+function playSound(sound) {
+  if (audio.muted) {
+    return;
   }
-});
 
-document.addEventListener('keyup', () => {
-  isMoveLeft = false;
-  isMoveRight = false;
-  isMoveUp = false;
-  isMoveDown = false;
-});
-
-function lose() {
-  myCanvas.style.display = "none";
-  startBtn.style.display = "none";
-  restartBtn.style.display = "";
-  document.querySelector('.gameOver').style.display = 'flex';
-  backsound.pause();
-  evilL.play();
-
-  playX = 70;
-  playY = 200;
-  initializeSpells();
-
-  gameOver = false;
-
-  let Score = document.querySelector(".gameOver h2");
-  Score.innerHTML = `Time: ${score}s`;
+  const playRequest = sound.play();
+  if (playRequest && typeof playRequest.catch === 'function') {
+    playRequest.catch(() => {});
+  }
 }
 
-function restartGame() {
-  backgroundx = 0;
-  backgroundy = 0;
-  backgroundy2 = -myCanvas.width;
+function startBackgroundAudio() {
+  audio.lose.pause();
+  audio.lose.currentTime = 0;
+  audio.background.loop = true;
+  audio.background.currentTime = 0;
+  playSound(audio.background);
+}
 
-  playX = 70;
-  playY = 200;
-  isMoveLeft = false;
-  isMoveRight = false;
-  isMoveUp = false;
-  isMoveDown = false;
-  isNotMove = true;
-  startTime = Date.now();
-  score = 0;
-  spellSpeed = 4;
-  lastSpeedIncreaseTime = 0;
+function stopBackgroundAudio() {
+  audio.background.pause();
+}
 
-  ctx.clearRect(0, 0, myCanvas.width, myCanvas.height);
-
-  myCanvas.style.display = 'block';
-  startBtn.style.display = 'none';
-  restartBtn.style.display = 'none';
-  document.querySelector('.gameOver').style.display = 'none';
-
-  animate();
+function cancelGameLoop() {
+  if (frameId !== null) {
+    window.cancelAnimationFrame(frameId);
+    frameId = null;
+  }
 }
 
 function startGame() {
-  initializeSpells();
-  startTime = Date.now();
-  animate();
-  backsound.play(loop = true);
-  evilL.pause();
-  document.querySelector('.menu').style.display = 'none';
-  canva.style.display = 'flex';
-  document.querySelector('.gameOver').style.display = 'none';
+  cancelGameLoop();
+  clearControls();
+  setScreen(SCREEN.GAME);
+  resizeCanvas();
+  state = createGameState();
+  updateScoreDisplays();
+  draw();
+  startBackgroundAudio();
+  frameId = window.requestAnimationFrame(gameLoop);
 }
 
-window.addEventListener('load', () => {
-  canva.style.display = 'none';
-  restart.style.display = 'none';
-  document.querySelector('.gameOver').style.display = 'none';
+function endGame() {
+  if (!state || state.status !== SCREEN.GAME) {
+    return;
+  }
 
-  document.getElementById('start-button').onclick = () => {
-    startGame();
+  state.status = SCREEN.GAME_OVER;
+  cancelGameLoop();
+  clearControls();
+  stopBackgroundAudio();
+
+  if (state.score > bestScore) {
+    bestScore = state.score;
+    storeBestScore(bestScore);
+  }
+
+  finalTimeDisplay.textContent = `${state.score}s`;
+  updateScoreDisplays();
+  audio.lose.currentTime = 0;
+  playSound(audio.lose);
+  setScreen(SCREEN.GAME_OVER);
+}
+
+function returnHome() {
+  cancelGameLoop();
+  clearControls();
+  stopBackgroundAudio();
+  audio.lose.pause();
+  audio.lose.currentTime = 0;
+  state = null;
+  updateScoreDisplays();
+  setScreen(SCREEN.MENU);
+}
+
+function getControlFromKey(key) {
+  const normalizedKey = key.toLowerCase();
+
+  if (normalizedKey === 'a' || key === 'ArrowLeft') {
+    return 'left';
+  }
+  if (normalizedKey === 'd' || key === 'ArrowRight') {
+    return 'right';
+  }
+  if (normalizedKey === 'w' || key === 'ArrowUp') {
+    return 'up';
+  }
+  if (normalizedKey === 's' || key === 'ArrowDown') {
+    return 'down';
+  }
+
+  return null;
+}
+
+function syncSoundButton() {
+  [soundButton, caughtSoundButton].forEach((button) => {
+    button.textContent = audio.muted ? 'Sound Off' : 'Sound On';
+    button.setAttribute('aria-pressed', String(!audio.muted));
+  });
+}
+
+function toggleSound() {
+  audio.muted = !audio.muted;
+
+  if (audio.muted) {
+    audio.background.pause();
+    audio.lose.pause();
+  } else if (state && state.status === SCREEN.GAME) {
+    playSound(audio.background);
+  } else if (state && state.status === SCREEN.GAME_OVER) {
+    playSound(audio.lose);
+  }
+
+  syncSoundButton();
+}
+
+function handleResize() {
+  if (!state || state.status !== SCREEN.GAME) {
+    return;
+  }
+
+  resizeCanvas();
+
+  const playerSize = getPlayerSize();
+  const spellSize = getSpellSize();
+
+  state.player.x = clamp(state.player.x, 0, game.width - playerSize);
+  state.player.y = clamp(state.player.y, 0, game.height - playerSize);
+  state.obstacles.forEach((obstacle) => {
+    obstacle.y = clamp(obstacle.y, 0, game.height - spellSize);
+  });
+
+  draw();
+}
+
+document.addEventListener('keydown', (event) => {
+  const control = getControlFromKey(event.key);
+
+  if (!control || !state || state.status !== SCREEN.GAME) {
+    return;
+  }
+
+  event.preventDefault();
+  keyboardControls.add(control);
+});
+
+document.addEventListener('keyup', (event) => {
+  const control = getControlFromKey(event.key);
+
+  if (!control) {
+    return;
+  }
+
+  keyboardControls.delete(control);
+});
+
+document.querySelectorAll('[data-control]').forEach((button) => {
+  const control = button.dataset.control;
+
+  button.addEventListener('pointerdown', (event) => {
+    if (!state || state.status !== SCREEN.GAME) {
+      return;
+    }
+
+    event.preventDefault();
+    pointerControls.add(control);
+    button.classList.add('is-active');
+
+    if (typeof button.setPointerCapture === 'function') {
+      button.setPointerCapture(event.pointerId);
+    }
+  });
+
+  const releaseControl = () => {
+    pointerControls.delete(control);
+    button.classList.remove('is-active');
   };
 
-  document.getElementById('restart').onclick = () => {
-    restartGame();
-    backsound.play();
-    backsound.currentTime = 0;
-  };
+  button.addEventListener('pointerup', releaseControl);
+  button.addEventListener('pointercancel', releaseControl);
+  button.addEventListener('lostpointercapture', releaseControl);
+});
+
+startButton.addEventListener('click', startGame);
+restartButton.addEventListener('click', startGame);
+homeButton.addEventListener('click', returnHome);
+
+soundButton.addEventListener('click', () => {
+  toggleSound();
+});
+caughtSoundButton.addEventListener('click', toggleSound);
+
+window.addEventListener('resize', handleResize);
+window.addEventListener('blur', clearControls);
+
+setScreen(SCREEN.MENU);
+syncSoundButton();
+updateScoreDisplays();
+
+startButton.disabled = true;
+startButton.textContent = 'Loading...';
+
+loadAssets().finally(() => {
+  startButton.disabled = false;
+  startButton.textContent = 'Start Game';
 });

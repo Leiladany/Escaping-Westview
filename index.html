@@ -3,38 +3,142 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <link rel="stylesheet" href="style.css" />
     <title>Escaping Westview</title>
   </head>
   <body>
+    <main class="app">
+      <section class="screen screen-menu" id="menu-screen" aria-labelledby="menu-title">
+        <div class="home-stage">
+          <div class="home-copy">
+            <h1 class="home-title" id="menu-title">Escaping Westview</h1>
+            <p>
+              Outrun Agatha's spells as Westview shifts around you and the magic
+              closes in.
+            </p>
+            <button class="button-wanda" id="start-button" type="button">
+              Start Game
+            </button>
+          </div>
 
-    <div class="intro">
-      <section class="menu">
-      <img src="./Images/Logo/Escaping Westview.png" alt="" class="logo-img" />
-      <br />
-      <div class='box1'>
-      <p class="inst">Step into the mystical realm of Wanda's world, inspired by the captivating WandaVision series. <br></br>Embark on an enchanting journey where you must guide Wanda through a spellbinding landscape, avoiding the relentless onslaught of Agatha Harkness' mystical spells. <br></br>Use your agility and control Wanda's movements with 'WASD' to navigate through the magical challenges. <br></br>How long can you outmaneuver the bewitching spells and unravel the secrets of this mesmerizing adventure?</p>
-      <button id="start-button">StartGame</button>
-      </div>
-      <footer>
-    <p id="link1"><a href="https://www.freepik.com/free-photo/red-background-display-your-product_20050865.htm#page=6&query=red%20and%20grey&position=19&from_view=search&track=ais">Image by benzoix</a> on Freepik</div>
-    </footer>
-    </section>
-     <div id="game-board">
-      <canvas id="canva" width="1200" height="550"></canvas>
-     </div>
-     <div class='gameOver'>
-      <section class="losemenu"></section>
-      <h1>You Got Caught</h1>
-      <div class='box2'>
-      <h2></h2>
-      <p>Oh no! Agatha's mystical spells have captured you in their enchanting embrace. <br></br>Can you summon the strength to rise again and face the magical challenges once more?</p>
-      <button id="restart">Restart</button>
-    </div>
-      <p id="link2"><a href="https://www.freepik.com/free-photo/color-smoke-abstract-wallpaper-aesthetic-background-design_18100653.htm#query=dark%20purple%20background&position=13&from_view=search&track=ais">Image by rawpixel.com</a> on Freepik</p>
-     </div>
-    </section>
-    <script type="text/javascript" src="index.js"></script>
+          <div class="home-art" aria-hidden="true">
+            <img
+              src="./images/agatha/agatha.png"
+              alt=""
+              class="home-agatha"
+            />
+            <img
+              src="./images/wanda/wanda-present.png"
+              alt=""
+              class="home-wanda"
+            />
+          </div>
+        </div>
+      </section>
+
+      <section class="screen screen-game" id="game-screen" aria-label="Game" hidden>
+        <div class="game-shell">
+          <header class="game-topbar">
+            <div class="game-brand">
+              <span>Escaping Westview</span>
+              <strong>Stay ahead of the hex</strong>
+            </div>
+
+            <div class="game-hud" aria-live="polite">
+              <div class="hud-stat">
+                <span>Seconds</span>
+                <strong id="score-display">0s</strong>
+              </div>
+              <div class="hud-stat">
+                <span>Best</span>
+                <strong id="best-score-display">0s</strong>
+              </div>
+            </div>
+
+            <button
+              class="button-neutral sound-button"
+              id="sound-button"
+              type="button"
+              aria-pressed="false"
+            >
+              Sound On
+            </button>
+          </header>
+
+          <div class="game-playfield">
+            <canvas id="game-canvas" width="1200" height="550">
+              Escaping Westview needs a browser that supports canvas.
+            </canvas>
+          </div>
+
+          <div class="touch-controls" aria-label="Movement controls">
+            <button
+              class="button-neutral"
+              type="button"
+              data-control="up"
+              aria-label="Move up"
+            >
+              W
+            </button>
+            <div class="touch-controls-row">
+              <button
+                class="button-neutral"
+                type="button"
+                data-control="left"
+                aria-label="Move left"
+              >
+                A
+              </button>
+              <button
+                class="button-neutral"
+                type="button"
+                data-control="down"
+                aria-label="Move down"
+              >
+                S
+              </button>
+              <button
+                class="button-neutral"
+                type="button"
+                data-control="right"
+                aria-label="Move right"
+              >
+                D
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="screen screen-game-over" id="game-over-screen" hidden>
+        <div class="caught-stage">
+          <h2>You Got Caught</h2>
+          <div class="caught-results">
+            <div class="caught-result">
+              <span>Seconds</span>
+              <strong id="final-time">0s</strong>
+            </div>
+          </div>
+          <div class="game-over-actions">
+            <button class="button-agatha" id="home-button" type="button">
+              Home
+            </button>
+            <button class="button-wanda" id="restart-button" type="button">
+              Restart
+            </button>
+            <button
+              class="button-neutral sound-button caught-sound-button"
+              id="caught-sound-button"
+              type="button"
+              aria-pressed="false"
+            >
+              Sound On
+            </button>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script src="index.js"></script>
   </body>
 </html>
